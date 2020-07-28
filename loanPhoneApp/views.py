@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from .forms import LoanForm
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -40,11 +41,13 @@ def loginuser(request):
             login(request, user)
             return redirect('applyLoan')
 
+@login_required
 def logoutuser(request):
     if request.method == 'POST':
         logout(request)
         return redirect('home')
 
+@login_required
 def applyLoan(request):
     if request.method == 'GET':
         return render(request, 'loanPhoneApp/applyLoan.html', {'form':LoanForm()})
@@ -58,5 +61,6 @@ def applyLoan(request):
         except ValueError:
             return render(request, 'loanPhoneApp/applyLoan.html', {'form': LoanForm(), 'error': 'Uh-oh bad data passed!'})
 
+@login_required()
 def successloan(request):
     return render(request, 'loanPhoneApp/successloan.html')
